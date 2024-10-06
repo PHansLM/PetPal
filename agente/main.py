@@ -1,3 +1,4 @@
+
 from entorno import Entorno
 from limpiadorPetpal import LimpiadorPetpal
 from busquedas import Heuristica, Ciega
@@ -16,8 +17,23 @@ def main():
     
     # Inicializa el agente en una posición inicial
     agente = LimpiadorPetpal(estacion_carga=(8, 0))
-    
+    print("Estado inicial del entorno:")
+    entorno.imprimirEntorno(agente.posicion)
+
+
     # EJECUCION DE AMBAS BUSQUEDAS
-    
+
+    solucion = Ciega.buscar(entorno, agente)  
+
+    if solucion is not None:
+        print("Solución encontrada, imprimiendo los pasos:")
+        # Simula el proceso de moverse y limpiar
+        for paso in solucion:
+            agente.mover(paso)
+            agente.limpiar(entorno)  # Limpia las casillas adyacentes con basura
+            entorno.imprimirEntorno(agente.posicion)  # Imprime cada paso
+    else:
+        print("No se encontró solución")
+
 if __name__ == "__main__":
     main()

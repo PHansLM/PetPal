@@ -6,5 +6,11 @@ class LimpiadorPetpal:
         self.posicion = nueva_posicion
 
     def limpiar(self, entorno):
-        # Limpia una casilla adyacente si hay desechos cerca
-        return entorno.limpiar_desecho(self.posicion)
+        # Limpia la basura en casillas adyacentes
+        x, y = self.posicion
+        adyacentes = [
+            (x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)
+        ]
+        for pos in adyacentes:
+            if pos in entorno.desechos:
+                entorno.desechos.remove(pos)  # Elimina la basura de la lista
