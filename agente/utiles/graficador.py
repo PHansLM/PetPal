@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 import networkx as nx
 
 def graficar_arbol(nodos, conexiones, niveles, solucion=None):
