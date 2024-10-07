@@ -22,6 +22,7 @@ def main():
     print("Estado inicial del entorno:")
     entorno.imprimirEntorno(agente.posicion)
 
+    print("BUSQUEDA DE PRIMERO EN ANCHURA")
     # EJECUCION DE AMBAS BUSQUEDAS
     solucion, nodos_explorados, conexiones, niveles = Ciega.buscar(entorno, agente)  
 
@@ -32,10 +33,19 @@ def main():
             agente.mover(paso)
             agente.limpiar(entorno)  # Limpia las casillas adyacentes con basura
             entorno.imprimirEntorno(agente.posicion)  # Imprime cada paso
-    else:
-        print("No se encontró solución")
+            complejidad = len(nodos_explorados)
 
-    # Graficar el árbol de búsqueda
+        print("--MEDIDAS DE RENDIMIENTO--")
+        print("Completitud: Si \nOptima: Si (dado el metodo de busqueda)")
+        print("Complejidad Temporal: {} u/t".format(complejidad))
+        print("Complejidad Espacial: {} u/e".format(complejidad))         
+    else:
+        print("No se encontró solución \n")
+        print("--MEDIDAS DE RENDIMIENTO--")
+        print("Completitud: NO \nOptima: - \n")
+        print("Complejidad Temporal: - \n")
+        print("Complejidad Espacial: -")
+
 
 
 if __name__ == "__main__":
