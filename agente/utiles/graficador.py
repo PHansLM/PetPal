@@ -37,3 +37,43 @@ def graficar_arbol(nodos, conexiones, niveles, solucion=None):
 
     plt.axis('off')  # Ocultar el eje
     plt.show()
+
+# Función para graficar el entorno
+def graficar_entorno(entorno, limpiador, title):
+    ancho, largo = entorno.ancho, entorno.largo
+    # Crear una matriz numérica para el entorno
+    grid = [[0 for _ in range(ancho)] for _ in range(largo)]
+    # Obstáculos en gris (valor 1)
+    for (x, y) in entorno.obstaculos:
+        grid[y][x] = 1
+    # Desechos en naranja (valor 2)
+    for (x, y) in entorno.desechos:
+        grid[y][x] = 2
+    # Limpiador en verde (valor 3)
+    x, y = limpiador.posicion
+    grid[y][x] = 3
+
+    cmap = mcolors.ListedColormap(['white', 'gray', 'orange', 'green'])
+    bounds = [0, 1, 2, 3, 4]
+    norm = mcolors.BoundaryNorm(bounds, cmap.N)
+
+    fig, ax = plt.subplots()
+    
+    # Ajustar el extent para que las celdas encajen perfectamente
+    ax.imshow(grid, cmap=cmap, norm=norm, extent=[0, ancho, largo, 0], aspect='equal')
+
+    # Configurar las etiquetas de los ticks
+    ax.set_xticks(range(ancho))
+    ax.set_yticks(range(largo))
+    ax.set_xticklabels(range(ancho))
+    ax.set_yticklabels(range(largo))
+    # Evitar cortes
+    ax.set_xlim(0, ancho)
+    ax.set_ylim(largo, 0)  # Invertir el eje y
+    
+    plt.title(title)
+    
+    # Ajustar la grilla para que no se sobreponga con las celdas
+    ax.grid(True, which='both', color='black', linestyle='-', linewidth=0.5)
+    
+    plt.show()
