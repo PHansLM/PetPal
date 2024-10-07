@@ -1,42 +1,62 @@
 from collections import deque
+from utiles.graficador import graficar_arbol
 
 def buscar(entorno, limpiadorPetpal):
-    # Incluimos también el estado de los desechos en el set de pasados
-    frontera = deque([(entorno.copy(), limpiadorPetpal.posicion, [])])  # Cola para BFS
+    # Inicia la frontera con la posición inicial y nivel 0
+    frontera = deque([(entorno.copy(), limpiadorPetpal.posicion, [], 0)])  
     pasados = set()  # Conjunto de estados explorados
-    
+    nodos = []  # Almacenar nodos explorados
+    conexiones = []  # Almacenar conexiones (nodo_padre, nodo_hijo)
+    niveles = {}  # Diccionario para almacenar niveles de nodos
+
     print("Inicio de la búsqueda en anchura")
 
     while frontera:
-        temp_entorno, posicion_actual, path = frontera.popleft()
+        temp_entorno, posicion_actual, path, nivel_actual = frontera.popleft()
 
-        # Estado actual del agente y desechos restantes
         estado_actual = (posicion_actual, frozenset(temp_entorno.desechos))
         
-        # Si ya se exploró este estado (posición + desechos), lo saltamos
         if estado_actual in pasados:
             continue
-        pasados.add(estado_actual)  # Marcamos este estado como explorado
         
-        # Verifica si se ha alcanzado el objetivo (no queda más basura)
+        # Agregar estado actual a los pasados y nodos explorados
+        pasados.add(estado_actual)
+        nodos.append(posicion_actual)
+
+        # Solo asignar el nivel si no se ha asignado previamente
+        if posicion_actual not in niveles:
+            niveles[posicion_actual] = nivel_actual  # Asigna el nivel al nodo actual
+
         if temp_entorno.prueba_meta():
             print("¡Solución encontrada!\n")
-            return path + [posicion_actual]  # Retorna cuando toda la basura ha sido limpiada
+            
+            # Recopilar posiciones de la solución
+            solucion = path + [posicion_actual]  # Aquí guardamos la ruta de la solución
 
-        # Limpiar desechos adyacentes
+            # Imprimir las posiciones con sus niveles
+            solucion_pasos = [(posicion) for posicion in solucion]
+            print("Posiciones de la solución:")
+            for pos in solucion_pasos:
+                print(f"Posición: {pos}")
+
+            # Graficar el árbol con la solución
+            graficar_arbol(nodos, conexiones, niveles, solucion=solucion)
+
+            return path + [posicion_actual], nodos, conexiones, niveles  # Retorna nodos y niveles
+
+        # Mover y limpiar
         limpiadorPetpal.mover(posicion_actual)
-        limpiadorPetpal.limpiar(temp_entorno)  # Limpia en la copia del entorno
+        limpiadorPetpal.limpiar(temp_entorno)
 
         # Obtener sucesores
         sucesores = temp_entorno.get_sucesores(posicion_actual)
 
-        # Expandir sucesores
         for sucesor in sucesores:
-            # Solo expandimos si no hemos explorado este sucesor en el estado actual de desechos
             nuevo_estado = (sucesor, frozenset(temp_entorno.desechos))
             if nuevo_estado not in pasados:
-                # Solo copiamos el entorno cuando es necesario expandir
-                frontera.append((temp_entorno.copy(), sucesor, path + [posicion_actual]))
+                # Asignar el nuevo nivel basado en el nivel actual
+                frontera.append((temp_entorno.copy(), sucesor, path + [posicion_actual], nivel_actual + 1))  
+                conexiones.append((posicion_actual, sucesor))
 
     print("No se encontró solución.")
-    return None  # Si no se encontró solución
+    return None, nodos, conexiones, niveles  # Si no se encontró solución
