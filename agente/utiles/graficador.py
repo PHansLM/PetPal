@@ -39,28 +39,32 @@ def graficar_arbol(nodos, conexiones, niveles, solucion=None):
     plt.axis('off')  # Ocultar el eje
     plt.show()
 
-# Función para graficar el entorno
-def graficar_entorno(entorno, limpiador, title):
+# Función para graficar el entorno con la imagen invertida correctamente
+def graficar_entorno(entorno, limpiador, title, pause_time=1):
     ancho, largo = entorno.ancho, entorno.largo
     # Crear una matriz numérica para el entorno
     grid = [[0 for _ in range(ancho)] for _ in range(largo)]
+
     # Obstáculos en gris (valor 1)
     for (x, y) in entorno.obstaculos:
         grid[y][x] = 1
+
     # Desechos en naranja (valor 2)
     for (x, y) in entorno.desechos:
         grid[y][x] = 2
+
     # Limpiador en verde (valor 3)
     x, y = limpiador.posicion
     grid[y][x] = 3
 
+    # Crear la figura con ajuste de tamaño de celda
     cmap = mcolors.ListedColormap(['white', 'gray', 'orange', 'green'])
     bounds = [0, 1, 2, 3, 4]
     norm = mcolors.BoundaryNorm(bounds, cmap.N)
 
     fig, ax = plt.subplots()
     
-    # Ajustar el extent para que las celdas encajen perfectamente
+    # Ajustar el extent para que las celdas encajen perfectamente e invertir la imagen
     ax.imshow(grid, cmap=cmap, norm=norm, extent=[0, ancho, largo, 0], aspect='equal')
 
     # Configurar las etiquetas de los ticks
@@ -68,7 +72,7 @@ def graficar_entorno(entorno, limpiador, title):
     ax.set_yticks(range(largo))
     ax.set_xticklabels(range(ancho))
     ax.set_yticklabels(range(largo))
-    # Evitar cortes
+    # Ajustar el rango de los ejes para evitar cortes
     ax.set_xlim(0, ancho)
     ax.set_ylim(largo, 0)  # Invertir el eje y
     
@@ -77,4 +81,6 @@ def graficar_entorno(entorno, limpiador, title):
     # Ajustar la grilla para que no se sobreponga con las celdas
     ax.grid(True, which='both', color='black', linestyle='-', linewidth=0.5)
     
-    plt.show()
+    plt.draw()
+    plt.pause(pause_time)  # Pausar por 2 segundos (puedes ajustar este tiempo si lo deseas)
+    plt.close()  # Cerrar la figura después de la pausa
