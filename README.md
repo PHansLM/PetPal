@@ -6,11 +6,10 @@
 ## Ejecutar el Proyecto
 para hacer correr este proyecto en su computadora necesita tener:
 - Tener instalado Python [puede descargarlo desde la pagina oficial](https://www.python.org/downloads/)
-- Usar algun editor de codigo
-- Despues debe ejecutar el siguiete comandos en su terminal
+- Despues debe ejecutar el siguiete comandos en su terminal de preferencia *(Nosotros usamos powershell)*
 
 ```powershell
-# instale las dependencias con:
+# instale las dependencias
 pip install networkx matplotlib
 
 # finalmente ejecute el main.py y vea el proyecto
