@@ -60,9 +60,13 @@ def buscar(entorno, PetPal):
             nuevo_estado = (mejor_sucesor, frozenset(entorno_act.desechos))
             if nuevo_estado not in visitados and entorno_act.posicion_valida(mejor_sucesor):
                 heapq.heappush(frontera, (nueva_h, entorno_act.copy(), mejor_sucesor, path + [posicion_actual]))
+                
+            nodos.append(mejor_sucesor)
             conexiones.append((posicion_actual, mejor_sucesor))
+            
             for sucesor in sucesores:
-                if sucesor != mejor_sucesor:
+                nuevo_estado = (mejor_sucesor, frozenset(entorno_act.desechos))
+                if sucesor != mejor_sucesor and sucesor not in visitados:
                     nodos.append(sucesor)
                     conexiones.append((posicion_actual, sucesor))
         paso += 1
